@@ -1,8 +1,3 @@
-# zwe_companion
+# ZWEC, the ZWE Companion
 
-Companion app for employees of the Munich municipality using an analog time card.
-
-## Getting Started
-
-For help getting started with Flutter, view our online
-[documentation](https://flutter.io/).
+Companion app for employees of the Munich Municipality using an analog time card.
