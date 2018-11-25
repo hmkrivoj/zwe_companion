@@ -48,12 +48,12 @@ void main() {
     expect(-ZweDuration(-5), equals(ZweDuration(5)));
     expect(ZweDuration(15) - ZweDuration(10), equals(ZweDuration(5)));
     expect(ZweDuration(10) - ZweDuration(15), equals(ZweDuration(-5)));
-    expect(ZweDuration(10).abs(), ZweDuration(10));
-    expect(ZweDuration(-10).abs(), ZweDuration(10));
-    expect(ZweDuration(10).isNegative(), false);
-    expect(ZweDuration(-10).isNegative(), true);
-    expect(ZweDuration(10).isPositive(), true);
-    expect(ZweDuration(-10).isPositive(), false);
+    expect(ZweDuration(10).abs(), equals(ZweDuration(10)));
+    expect(ZweDuration(-10).abs(), equals(ZweDuration(10)));
+    expect(ZweDuration(10).isNegative(), equals(false));
+    expect(ZweDuration(-10).isNegative(), equals(true));
+    expect(ZweDuration(10).isPositive(), equals(true));
+    expect(ZweDuration(-10).isPositive(), equals(false));
   });
   test('Test ZweInstant constructor', () {
     var instant1 = ZweInstant(0);
@@ -104,7 +104,23 @@ void main() {
     expect(ZweInstant(10) + ZweDuration(5), equals(ZweInstant(15)));
     expect(ZweInstant(15) - ZweDuration(5), equals(ZweInstant(10)));
     expect(ZweInstant(15) - ZweDuration(10), equals(ZweInstant(5)));
-    expect(ZweInstant(10).until(ZweInstant(20)), ZweDuration(10));
-    expect(ZweInstant(230).until(ZweInstant(20)), ZweDuration(30));
+    expect(ZweInstant(10).until(ZweInstant(20)), equals(ZweDuration(10)));
+    expect(ZweInstant(230).until(ZweInstant(20)), equals(ZweDuration(30)));
+  });
+  test('Test ZweInstant and ZweDuration hashcodes', () {
+    var instant1 = ZweInstant(10);
+    var instant2 = ZweInstant.fromTime(7, 30);
+    var instant3 = ZweInstant(20);
+    var duration1 = ZweDuration(10);
+    var duration2 = ZweDuration.fromTime(1, 0);
+    var duration3 = ZweDuration(20);
+    expect(instant1.hashCode, equals(instant2.hashCode));
+    expect(instant1.hashCode, equals(instant2.hashCode));
+    expect(instant1.hashCode, isNot(instant3.hashCode));
+    expect(instant2.hashCode, isNot(instant3.hashCode));
+    expect(duration1.hashCode, equals(duration2.hashCode));
+    expect(duration1.hashCode, equals(duration2.hashCode));
+    expect(duration1.hashCode, isNot(duration3.hashCode));
+    expect(duration2.hashCode, isNot(duration3.hashCode));
   });
 }

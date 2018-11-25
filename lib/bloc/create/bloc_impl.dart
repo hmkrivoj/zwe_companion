@@ -15,8 +15,10 @@ class CreateBLoCImpl implements CreateBLoC {
   final _departureController = BehaviorSubject<String>();
   final _targetController = BehaviorSubject<String>();
   final Repository dao;
+  @override
+  final DateTime initialDate;
 
-  CreateBLoCImpl(this.dao);
+  CreateBLoCImpl(this.dao, this.initialDate);
 
   @override
   Sink<String> get additionalBreakSink => _additionalBreakController;
@@ -98,18 +100,14 @@ class CreateBLoCImpl implements CreateBLoC {
   void createWorkday(Workday workday) => dao.create(workday);
 
   @override
-  Optional<ZweDuration> get initialAdditionalBreak =>
-      Optional.of(ZweDuration(0));
+  ZweDuration get initialAdditionalBreak => ZweDuration(0);
 
   @override
-  Optional<ZweInstant> get initialArrival => Optional.of(ZweInstant(0));
+  ZweInstant get initialArrival => ZweInstant(0);
 
   @override
-  Optional<DateTime> get initialDate => Optional.of(DateTime.now());
+  ZweInstant get initialDeparture => ZweInstant(85);
 
   @override
-  Optional<ZweInstant> get initialDeparture => Optional.of(ZweInstant(85));
-
-  @override
-  Optional<ZweDuration> get initialTarget => Optional.of(ZweDuration(78));
+  ZweDuration get initialTarget => ZweDuration(78);
 }

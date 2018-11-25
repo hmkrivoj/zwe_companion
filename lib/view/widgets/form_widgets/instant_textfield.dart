@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:optional/optional.dart';
 import 'package:zwe_companion/model/model.dart';
 import 'package:zwe_companion/util/zwe_formatter.dart';
-import 'package:zwe_companion/view/widgets/custom_time_picker.dart';
 
 class InstantTextfield extends StatefulWidget {
   final Stream<Optional<ZweInstant>> stream;
-  final Optional<ZweInstant> initialData;
+  final ZweInstant initialData;
   final Sink<String> sink;
   final String labelText;
 
@@ -15,7 +14,7 @@ class InstantTextfield extends StatefulWidget {
     Key key,
     @required this.stream,
     @required this.labelText,
-    this.initialData = const Optional<ZweInstant>.empty(),
+    @required this.initialData,
   }) : super(key: key);
 
   @override
@@ -30,14 +29,13 @@ class _InstantTextfieldState extends State<InstantTextfield> {
   void initState() {
     super.initState();
     controller.addListener(() => widget.sink.add(controller.text));
-    widget.initialData
-        .ifPresent((instant) => controller.text = '${instant.raw}');
+    controller.text = '${widget.initialData.raw}';
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Optional<ZweInstant>>(
-      initialData: widget.initialData,
+      initialData: Optional.of(widget.initialData),
       stream: widget.stream,
       builder: (context, snapshot) {
         return TextField(
@@ -53,12 +51,20 @@ class _InstantTextfieldState extends State<InstantTextfield> {
             suffixIcon: IconButton(
               icon: Icon(Icons.access_time),
               onPressed: () {
-                final initial =
-                    snapshot.data.isPresent ? snapshot.data.value : null;
-                showCustomTimePicker(context: context, initial: initial).then(
+                final initialZwe = snapshot.data.isPresent
+                    ? snapshot.data.value
+                    : widget.initialData;
+                showTimePicker(
+                  context: context,
+                  initialTime: TimeOfDay(
+                      hour: initialZwe.hour, minute: initialZwe.minute),
+                ).then(
                   (time) {
                     if (time != null) {
-                      controller.text = time.raw.toString();
+                      controller.text =
+                          ZweInstant.fromTime(time.hour, time.minute)
+                              .raw
+                              .toString();
                     }
                   },
                 );

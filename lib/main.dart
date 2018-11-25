@@ -12,7 +12,8 @@ import 'package:zwe_companion/view/screens/main_scaffold.dart';
 void main() async {
   final injector = Injector.getInjector();
   injector.map<Repository>((i) => SqliteRepository(), isSingleton: true);
-  injector.map<CreateBLoC>((i) => CreateBLoCImpl(i.get<Repository>()));
+  injector.map<CreateBLoC>(
+      (i) => CreateBLoCImpl(i.get<Repository>(), DateTime.now()));
   injector.map<FilterBloc>((i) => FilterBlocImpl(i.get()));
   runApp(MyApp());
 }

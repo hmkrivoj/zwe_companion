@@ -4,7 +4,7 @@ import 'package:optional/optional.dart';
 
 class DateTextfield extends StatefulWidget {
   final Stream<Optional<DateTime>> stream;
-  final Optional<DateTime> initialData;
+  final DateTime initialData;
   final Sink<String> sink;
   final String labelText;
 
@@ -13,7 +13,7 @@ class DateTextfield extends StatefulWidget {
     Key key,
     @required this.stream,
     @required this.labelText,
-    this.initialData = const Optional<DateTime>.empty(),
+    @required this.initialData,
   }) : super(key: key);
 
   @override
@@ -27,14 +27,13 @@ class _DateTextfieldState extends State<DateTextfield> {
   void initState() {
     super.initState();
     controller.addListener(() => widget.sink.add(controller.text));
-    widget.initialData.ifPresent(
-        (date) => controller.text = DateFormat.yMd('de_DE').format(date));
+    controller.text = DateFormat.yMd('de_DE').format(widget.initialData);
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Optional<DateTime>>(
-      initialData: widget.initialData,
+      initialData: Optional.of(widget.initialData),
       stream: widget.stream,
       builder: (context, snapshot) {
         return TextField(

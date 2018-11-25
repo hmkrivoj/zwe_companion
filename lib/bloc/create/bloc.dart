@@ -13,10 +13,10 @@ abstract class CreateBLoC {
   Sink<String> get departureSink;
   Sink<String> get targetSink;
   Sink<String> get additionalBreakSink;
-  Optional<DateTime> get initialDate;
-  Optional<ZweInstant> get initialArrival;
-  Optional<ZweInstant> get initialDeparture;
-  Optional<ZweDuration> get initialTarget;
-  Optional<ZweDuration> get initialAdditionalBreak;
+  DateTime get initialDate;
+  ZweInstant get initialArrival;
+  ZweInstant get initialDeparture;
+  ZweDuration get initialTarget;
+  ZweDuration get initialAdditionalBreak;
   void createWorkday(Workday workday);
 }

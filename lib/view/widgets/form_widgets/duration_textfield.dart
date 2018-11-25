@@ -5,7 +5,7 @@ import 'package:zwe_companion/util/zwe_formatter.dart';
 
 class DurationTextfield extends StatefulWidget {
   final Stream<Optional<ZweDuration>> stream;
-  final Optional<ZweDuration> initialData;
+  final ZweDuration initialData;
   final Sink<String> sink;
   final String labelText;
 
@@ -14,7 +14,7 @@ class DurationTextfield extends StatefulWidget {
     Key key,
     @required this.stream,
     @required this.labelText,
-    this.initialData = const Optional<ZweDuration>.empty(),
+    @required this.initialData,
   }) : super(key: key);
 
   @override
@@ -32,14 +32,13 @@ class _DurationTextfieldState extends State<DurationTextfield> {
   void initState() {
     super.initState();
     controller.addListener(() => widget.sink.add(controller.text));
-    widget.initialData
-        .ifPresent((instant) => controller.text = '${instant.raw}');
+    controller.text = '${widget.initialData.raw}';
   }
 
   @override
   Widget build(BuildContext context) {
     return StreamBuilder<Optional<ZweDuration>>(
-      initialData: widget.initialData,
+      initialData: Optional.of(widget.initialData),
       stream: widget.stream,
       builder: (context, snapshot) {
         return TextField(

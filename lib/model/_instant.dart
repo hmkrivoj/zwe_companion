@@ -3,13 +3,9 @@ import 'package:zwe_companion/model/model.dart';
 class ZweInstant implements FormatableZweTemporal {
   final int raw;
 
-  ZweInstant(this.raw);
-  ZweInstant.fromTime(int hour, int minute)
+  const ZweInstant(this.raw);
+  const ZweInstant.fromTime(int hour, int minute)
       : this.raw = (10 * hour + minute ~/ 6 - 65) % 240;
-  factory ZweInstant.now() {
-    final time = DateTime.now();
-    return ZweInstant.fromTime(time.hour, time.minute);
-  }
 
   @override
   int get hour => ((raw + 65) % 240 ~/ 10);
