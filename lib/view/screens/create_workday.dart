@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_simple_dependency_injection/injector.dart';
 import 'package:optional/optional.dart';
 import 'package:zwe_companion/bloc/create/bloc.dart';
 import 'package:zwe_companion/model/model.dart';
@@ -9,12 +8,21 @@ import 'package:zwe_companion/view/widgets/form_widgets/duration_textfield.dart'
 import 'package:zwe_companion/view/widgets/form_widgets/instant_textfield.dart';
 
 class CreateWorkdayScaffold extends StatefulWidget {
+  final CreateBLoC initialBloc;
+
+  CreateWorkdayScaffold({Key key, @required this.initialBloc})
+      : super(key: key);
+
   @override
-  State<StatefulWidget> createState() => _CreateWorkdayScaffoldState();
+  CreateWorkdayScaffoldState createState() {
+    return CreateWorkdayScaffoldState(initialBloc);
+  }
 }
 
-class _CreateWorkdayScaffoldState extends State<CreateWorkdayScaffold> {
-  CreateBLoC bLoC;
+class CreateWorkdayScaffoldState extends State<CreateWorkdayScaffold> {
+  final CreateBLoC bloc;
+
+  CreateWorkdayScaffoldState(this.bloc);
 
   @override
   Widget build(BuildContext context) {
@@ -30,35 +38,35 @@ class _CreateWorkdayScaffoldState extends State<CreateWorkdayScaffold> {
           children: <Widget>[
             DurationTextfield(
               labelText: 'Tagessoll(Ohne Pause)',
-              stream: bLoC.target,
-              sink: bLoC.targetSink,
-              initialData: bLoC.initialTarget,
+              stream: bloc.target,
+              sink: bloc.targetSink,
+              initialData: bloc.initialTarget,
             ),
             DateTextfield(
               labelText: 'Datum',
-              stream: bLoC.date,
-              sink: bLoC.dateSink,
-              initialData: bLoC.initialDate,
+              stream: bloc.date,
+              sink: bloc.dateSink,
+              initialData: bloc.initialDate,
             ),
             Divider(),
             InstantTextfield(
               labelText: 'Kommt',
-              stream: bLoC.arrival,
-              sink: bLoC.arrivalSink,
-              initialData: bLoC.initialArrival,
+              stream: bloc.arrival,
+              sink: bloc.arrivalSink,
+              initialData: bloc.initialArrival,
             ),
             InstantTextfield(
               labelText: 'Geht',
-              stream: bLoC.departure,
-              sink: bLoC.departureSink,
-              initialData: bLoC.initialDeparture,
+              stream: bloc.departure,
+              sink: bloc.departureSink,
+              initialData: bloc.initialDeparture,
             ),
             Divider(),
             DurationTextfield(
               labelText: 'Pause zusätzlich zur vorgeschriebenen Pause',
-              stream: bLoC.additionalBreak,
-              sink: bLoC.additionalBreakSink,
-              initialData: bLoC.initialAdditionalBreak,
+              stream: bloc.additionalBreak,
+              sink: bloc.additionalBreakSink,
+              initialData: bloc.initialAdditionalBreak,
             ),
             Divider(),
             Row(
@@ -66,7 +74,7 @@ class _CreateWorkdayScaffoldState extends State<CreateWorkdayScaffold> {
                 Expanded(
                   child: StreamBuilder<Optional<Workday>>(
                     initialData: Optional<Workday>.empty(),
-                    stream: bLoC.workday,
+                    stream: bloc.workday,
                     builder: (context, snapshot) {
                       return BalanceButton(
                         data: snapshot.data,
@@ -83,11 +91,5 @@ class _CreateWorkdayScaffoldState extends State<CreateWorkdayScaffold> {
         ),
       ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    bLoC = Injector.getInjector().get<CreateBLoC>();
   }
 }

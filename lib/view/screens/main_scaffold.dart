@@ -3,7 +3,6 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
 import 'package:zwe_companion/bloc/filter/bloc.dart';
 import 'package:zwe_companion/model/model.dart';
-import 'package:zwe_companion/view/screens/create_workday.dart';
 import 'package:zwe_companion/view/widgets/summary/summary_view.dart';
 import 'package:zwe_companion/view/widgets/workday_view.dart';
 
@@ -67,12 +66,7 @@ class MainScaffold extends StatelessWidget {
   FloatingActionButton buildFloatingActionButton(BuildContext context) {
     return FloatingActionButton(
       onPressed: () {
-        Navigator.push(
-          context,
-          MaterialPageRoute<Workday>(
-            builder: (context) => CreateWorkdayScaffold(),
-          ),
-        ).then((workday) {
+        Navigator.pushNamed(context, '/create').then((workday) {
           if (workday != null) {
             bloc.create(workday);
           }

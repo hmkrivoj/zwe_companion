@@ -6,13 +6,15 @@ import 'package:zwe_companion/model/_workday.dart';
 import 'package:zwe_companion/persistence/dao.dart';
 
 class FilterBlocImpl implements FilterBloc {
-  final _monthSelections = BehaviorSubject<DateTime>(seedValue: DateTime.now());
+  final _monthSelections = BehaviorSubject<DateTime>();
   final _created = PublishSubject<Workday>();
   final _deleted = PublishSubject<Workday>();
   final _updated = PublishSubject<Workday>();
   final Repository repository;
 
-  FilterBlocImpl(this.repository);
+  FilterBlocImpl(this.repository, DateTime initialDate) {
+    _monthSelections.sink.add(initialDate);
+  }
 
   Stream<DateTime> get _trigger => Observable.combineLatest2(
       monthSelected,
