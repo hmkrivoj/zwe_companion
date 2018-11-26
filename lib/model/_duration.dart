@@ -1,5 +1,7 @@
 import 'package:zwe_companion/model/model.dart';
 
+/// ZWE representing a period of time instead of a point in time.
+/// One ZWE equals 6 minutes.
 class ZweDuration implements FormatableZweTemporal {
   final int raw;
 

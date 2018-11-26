@@ -1,5 +1,7 @@
 import 'package:zwe_companion/model/model.dart';
 
+/// ZWE representing a point in time instead of a period of time.
+/// The day starts with 0 ZWE which is 6:30 in real time.
 class ZweInstant implements FormatableZweTemporal {
   final int raw;
 

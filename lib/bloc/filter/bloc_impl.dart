@@ -3,7 +3,7 @@ import 'package:rxdart/rxdart.dart';
 import 'package:zwe_companion/bloc/filter/bloc.dart';
 import 'package:zwe_companion/model/_duration.dart';
 import 'package:zwe_companion/model/_workday.dart';
-import 'package:zwe_companion/persistence/dao.dart';
+import 'package:zwe_companion/persistence/repository.dart';
 
 class FilterBlocImpl implements FilterBloc {
   final _monthSelections = BehaviorSubject<DateTime>();

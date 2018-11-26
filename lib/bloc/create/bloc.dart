@@ -1,7 +1,7 @@
 import 'package:optional/optional.dart';
 import 'package:zwe_companion/model/model.dart';
 
-abstract class CreateBLoC {
+abstract class CreateBloc {
   Stream<Optional<DateTime>> get date;
   Stream<Optional<ZweInstant>> get arrival;
   Stream<Optional<ZweInstant>> get departure;

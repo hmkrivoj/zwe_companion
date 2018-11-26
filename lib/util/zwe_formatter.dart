@@ -1,5 +1,6 @@
 import 'package:zwe_companion/model/model.dart';
 
+/// Converts ZWEs to strings of hours and minutes.
 class ZweFormatter {
   final String suffix;
   final String prefix;

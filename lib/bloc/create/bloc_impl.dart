@@ -3,9 +3,9 @@ import 'package:optional/optional_internal.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:zwe_companion/bloc/create/bloc.dart';
 import 'package:zwe_companion/model/model.dart';
-import 'package:zwe_companion/persistence/dao.dart';
+import 'package:zwe_companion/persistence/repository.dart';
 
-class CreateBLoCImpl implements CreateBLoC {
+class CreateBlocImpl implements CreateBloc {
   static final _dateRegex = RegExp(r'\d\d?\.\d\d?\.\d\d\d\d');
   static final _zweRegex = RegExp(r'\D');
 
@@ -18,7 +18,7 @@ class CreateBLoCImpl implements CreateBLoC {
   @override
   final DateTime initialDate;
 
-  CreateBLoCImpl(this.dao, this.initialDate);
+  CreateBlocImpl(this.dao, this.initialDate);
 
   @override
   Sink<String> get additionalBreakSink => _additionalBreakController;

@@ -2,8 +2,9 @@ import 'package:optional/optional_internal.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:zwe_companion/model/model.dart';
-import 'package:zwe_companion/persistence/dao.dart';
+import 'package:zwe_companion/persistence/repository.dart';
 
+/// Repository using Sqflite for persisting data locally.
 class SqliteRepository implements Repository {
   static const _VERSION = 2;
   static const _TABLE_WORKDAY = 'workday';

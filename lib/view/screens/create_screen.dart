@@ -7,22 +7,21 @@ import 'package:zwe_companion/view/widgets/form_widgets/date_textfield.dart';
 import 'package:zwe_companion/view/widgets/form_widgets/duration_textfield.dart';
 import 'package:zwe_companion/view/widgets/form_widgets/instant_textfield.dart';
 
-class CreateWorkdayScaffold extends StatefulWidget {
-  final CreateBLoC initialBloc;
+class CreateScreen extends StatefulWidget {
+  final CreateBloc initialBloc;
 
-  CreateWorkdayScaffold({Key key, @required this.initialBloc})
-      : super(key: key);
+  CreateScreen({Key key, @required this.initialBloc}) : super(key: key);
 
   @override
-  CreateWorkdayScaffoldState createState() {
-    return CreateWorkdayScaffoldState(initialBloc);
+  CreateScreenState createState() {
+    return CreateScreenState(initialBloc);
   }
 }
 
-class CreateWorkdayScaffoldState extends State<CreateWorkdayScaffold> {
-  final CreateBLoC bloc;
+class CreateScreenState extends State<CreateScreen> {
+  final CreateBloc bloc;
 
-  CreateWorkdayScaffoldState(this.bloc);
+  CreateScreenState(this.bloc);
 
   @override
   Widget build(BuildContext context) {

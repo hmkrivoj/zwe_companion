@@ -6,11 +6,11 @@ import 'package:zwe_companion/model/model.dart';
 import 'package:zwe_companion/view/widgets/summary/summary_view.dart';
 import 'package:zwe_companion/view/widgets/workday_view.dart';
 
-class MainScaffold extends StatelessWidget {
+class FilterScreen extends StatelessWidget {
   final _slidableController = SlidableController();
   final FilterBloc bloc;
 
-  MainScaffold({Key key, this.bloc}) : super(key: key);
+  FilterScreen({Key key, this.bloc}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +42,7 @@ class MainScaffold extends StatelessWidget {
             if (snapshot.hasData) {
               return Text('${DateFormat.yMMMM('de_DE').format(snapshot.data)}');
             }
-            return Text('ZWE Companion');
+            return Text('Kein Monat ausgewählt');
           }),
       centerTitle: true,
       actions: <Widget>[

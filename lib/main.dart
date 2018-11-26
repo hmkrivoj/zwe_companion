@@ -6,34 +6,38 @@ import 'package:zwe_companion/bloc/create/bloc.dart';
 import 'package:zwe_companion/bloc/create/bloc_impl.dart';
 import 'package:zwe_companion/bloc/filter/bloc.dart';
 import 'package:zwe_companion/bloc/filter/bloc_impl.dart';
-import 'package:zwe_companion/persistence/dao.dart';
-import 'package:zwe_companion/persistence/impl/sqlite_dao.dart';
-import 'package:zwe_companion/view/screens/create_workday.dart';
-import 'package:zwe_companion/view/screens/main_scaffold.dart';
+import 'package:zwe_companion/persistence/impl/sqlite_repository.dart';
+import 'package:zwe_companion/persistence/repository.dart';
+import 'package:zwe_companion/view/screens/create_screen.dart';
+import 'package:zwe_companion/view/screens/filter_screen.dart';
 
 void main() {
   setUpDependencies();
-  setUpRoutes(Injector.getInjector().get<Router>());
-  runApp(MyApp(router: Injector.getInjector().get<Router>()));
+  final injector = Injector.getInjector();
+  setUpRoutes(injector.get<Router>());
+  runApp(MyApp(router: injector.get<Router>()));
 }
 
-Injector setUpDependencies() {
+/// Registers all interdependencies with the dependency injector.
+void setUpDependencies() {
   final injector = Injector.getInjector();
   injector.map<Router>((i) => Router(), isSingleton: true);
   injector.map<Repository>((i) => SqliteRepository(), isSingleton: true);
-  injector.map<FilterBloc>((i) => FilterBlocImpl(i.get(), DateTime.now()),
+  injector.map<FilterBloc>(
+      (i) => FilterBlocImpl(i.get<Repository>(), DateTime.now()),
       isSingleton: true);
-  injector.map<CreateBLoC>(
-      (i) => CreateBLoCImpl(i.get<Repository>(), DateTime.now()));
-  return injector;
+  injector.map<CreateBloc>(
+      (i) => CreateBlocImpl(i.get<Repository>(), DateTime.now()));
 }
 
+/// Registers handlers for all page routes.
 void setUpRoutes(Router router) {
+  final injector = Injector.getInjector();
   var home = Handler(handlerFunc: (context, params) {
-    return MainScaffold(bloc: Injector.getInjector().get());
+    return FilterScreen(bloc: injector.get());
   });
   var create = Handler(handlerFunc: (context, params) {
-    return CreateWorkdayScaffold(initialBloc: Injector.getInjector().get());
+    return CreateScreen(initialBloc: injector.get());
   });
   router.define('/', handler: home);
   router.define('/create', handler: create);
