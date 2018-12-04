@@ -43,19 +43,19 @@ class FilterBlocImpl implements FilterBloc {
   @override
   Future<Optional<Workday>> create(Workday workday) =>
       repository.create(workday).then((o) {
-        o.ifPresent(_created.add);
+        o.ifPresent(_created.sink.add);
         return o;
       });
   @override
   Future<Optional<Workday>> delete(Workday workday) =>
       repository.delete(workday).then((o) {
-        o.ifPresent(_deleted.add);
+        o.ifPresent(_deleted.sink.add);
         return o;
       });
   @override
   Future<Optional<Workday>> update(Workday workday) =>
       repository.update(workday).then((o) {
-        o.ifPresent(_updated.add);
+        o.ifPresent(_updated.sink.add);
         return o;
       });
 
