@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:intl/intl.dart';
+import 'package:month_picker_dialog/month_picker_dialog.dart';
 import 'package:zwe_companion/bloc/filter/bloc.dart';
 import 'package:zwe_companion/model/model.dart';
 import 'package:zwe_companion/view/widgets/summary/summary_view.dart';
@@ -48,16 +49,18 @@ class FilterScreen extends StatelessWidget {
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.edit),
-          onPressed: () => showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                firstDate: DateTime(2018),
-                lastDate: DateTime(2030),
-              ).then((date) {
-                if (date != null) {
-                  bloc.selectMonth(date);
-                }
-              }),
+          onPressed: () => bloc.monthSelected.first.then(
+                (selected) => showMonthPicker(
+                      context: context,
+                      initialDate: selected,
+                    ).then(
+                      (date) {
+                        if (date != null) {
+                          bloc.selectMonth(date);
+                        }
+                      },
+                    ),
+              ),
         )
       ],
     );
