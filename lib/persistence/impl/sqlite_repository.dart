@@ -6,6 +6,7 @@ import 'package:zwe_companion/persistence/repository.dart';
 
 /// Repository using Sqflite for persisting data locally.
 class SqliteRepository implements Repository {
+  static const _DATABASE_FILE = '/zwe_companion.db';
   static const _VERSION = 2;
   static const _TABLE_WORKDAY = 'workday';
   static const _COLUMN_WORKDAY_ID = 'id';
@@ -104,7 +105,7 @@ class SqliteRepository implements Repository {
   Future<Database> _getDatabase() async {
     if (_dbInstance == null) {
       final path = await getApplicationDocumentsDirectory()
-          .then((dir) => dir.path + '/zwe_companion.db');
+          .then((dir) => dir.path + _DATABASE_FILE);
       _dbInstance = await openDatabase(
         path,
         version: _VERSION,
