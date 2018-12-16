@@ -20,13 +20,21 @@ class SqliteRepository implements Repository {
 
   @override
   Future<List<Workday>> findWorkdaysByMonth(DateTime date) => _getDatabase()
-      .then((db) => db.query(_TABLE_WORKDAY,
-          orderBy: _COLUMN_WORKDAY_DATE,
-          where:
-              "strftime('%Y', datetime($_COLUMN_WORKDAY_DATE, 'unixepoch')) == '?' AND "
-              "strftime('%m', datetime($_COLUMN_WORKDAY_DATE, 'unixepoch')) == '?'",
-          whereArgs: [date.year, date.month]))
-      .then((records) => records.map((record) => Workday.fromMap(record)).toList());
+      .then(
+        (db) => db.query(
+              _TABLE_WORKDAY,
+              orderBy: _COLUMN_WORKDAY_DATE,
+              where: "$_COLUMN_WORKDAY_DATE >= ? AND "
+                  "$_COLUMN_WORKDAY_DATE < ?",
+              whereArgs: [
+                DateTime(date.year, date.month).millisecondsSinceEpoch ~/ 1000,
+                DateTime(date.year, date.month + 1).millisecondsSinceEpoch ~/
+                    1000,
+              ],
+            ),
+      )
+      .then((records) =>
+          records.map((record) => Workday.fromMap(record)).toList());
 
   @override
   Future<ZweDuration> getBalanceAtBeginningOfMonth(DateTime date) {

@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:zwe_companion/bloc/filter/bloc.dart';
-import 'package:zwe_companion/view/widgets/summary/sum_view.dart';
+import 'package:zwe_companion/view/widgets/summary/balances_bar.dart';
+import 'package:zwe_companion/view/widgets/summary/chart_view.dart';
 
-class Summary extends StatelessWidget {
-  final Balances balances;
+class SummaryView extends StatelessWidget {
+  final Result result;
 
-  Summary(this.balances);
+  const SummaryView({Key key, this.result}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +14,14 @@ class Summary extends StatelessWidget {
       elevation: 4.0,
       child: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: SumBar(balances: balances),
+        child: Column(
+          children: <Widget>[
+            result.workdays.length > 0
+                ? SizedBox(height: 300, child: ChartView(result: result))
+                : Container(),
+            BalancesBar(result: result),
+          ],
+        ),
       ),
     );
   }

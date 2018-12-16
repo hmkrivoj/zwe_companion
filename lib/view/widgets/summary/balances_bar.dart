@@ -3,34 +3,34 @@ import 'package:groovin_material_icons/groovin_material_icons.dart';
 import 'package:zwe_companion/bloc/filter/bloc.dart';
 import 'package:zwe_companion/model/model.dart';
 
-class SumBar extends StatelessWidget {
-  final Balances balances;
+class BalancesBar extends StatelessWidget {
+  final Result result;
 
-  const SumBar({Key key, @required this.balances}) : super(key: key);
+  const BalancesBar({Key key, @required this.result}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: <Widget>[
-        SumView(
-          positive: balances.preBalancePositive,
-          negative: balances.preBalanceNegative,
-          sum: balances.preBalance,
+        _BalanceView(
+          positive: result.pre.positiveAddend,
+          negative: result.pre.negativeAddend,
+          sum: result.pre.total,
           icon: GroovinMaterialIcons.format_horizontal_align_left,
-          labelText: 'Monatsbegin',
+          labelText: 'Monatsbeginn',
         ),
-        SumView(
-          positive: balances.midBalancePositive,
-          negative: balances.midBalanceNegative,
-          sum: balances.midBalance,
+        _BalanceView(
+          positive: result.mid.positiveAddend,
+          negative: result.mid.negativeAddend,
+          sum: result.mid.total,
           icon: GroovinMaterialIcons.format_horizontal_align_center,
           labelText: 'Monatsmitte',
         ),
-        SumView(
-          positive: balances.postBalancePositive,
-          negative: balances.postBalanceNegative,
-          sum: balances.postBalance,
+        _BalanceView(
+          positive: result.post.positiveAddend,
+          negative: result.post.negativeAddend,
+          sum: result.post.total,
           icon: GroovinMaterialIcons.format_horizontal_align_right,
           labelText: 'Monatsende',
         ),
@@ -39,13 +39,13 @@ class SumBar extends StatelessWidget {
   }
 }
 
-class SumView extends StatelessWidget {
+class _BalanceView extends StatelessWidget {
   final IconData icon;
   final String labelText;
   final ZweDuration positive;
   final ZweDuration negative;
   final ZweDuration sum;
-  const SumView({
+  const _BalanceView({
     Key key,
     @required this.positive,
     @required this.negative,
@@ -74,14 +74,14 @@ class SumView extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  SmallZweText(zwe: positive, signum: ZweSignum.POSITIVE),
-                  SmallZweText(zwe: negative, signum: ZweSignum.NEGATIVE),
+                  _SmallZweText(zwe: positive, signum: _ZweSignum.POSITIVE),
+                  _SmallZweText(zwe: negative, signum: _ZweSignum.NEGATIVE),
                 ],
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
-                  BigZweText(zwe: sum),
+                  _BigZweText(zwe: sum),
                 ],
               ),
             ],
@@ -92,11 +92,14 @@ class SumView extends StatelessWidget {
   }
 }
 
-class SmallZweText extends StatelessWidget {
-  final ZweDuration zwe;
-  final ZweSignum signum;
+enum _ZweSignum { POSITIVE, NEGATIVE }
 
-  SmallZweText({Key key, @required this.zwe, @required this.signum})
+// SmallZweText will always format text in either positive or negative style.
+class _SmallZweText extends StatelessWidget {
+  final ZweDuration zwe;
+  final _ZweSignum signum;
+
+  _SmallZweText({Key key, @required this.zwe, @required this.signum})
       : super(key: key);
 
   @override
@@ -104,11 +107,11 @@ class SmallZweText extends StatelessWidget {
     Color color;
     String prefix;
     switch (signum) {
-      case ZweSignum.POSITIVE:
+      case _ZweSignum.POSITIVE:
         color = Colors.green;
         prefix = '+';
         break;
-      case ZweSignum.NEGATIVE:
+      case _ZweSignum.NEGATIVE:
         color = Colors.red;
         prefix = '-';
         break;
@@ -120,10 +123,10 @@ class SmallZweText extends StatelessWidget {
   }
 }
 
-class BigZweText extends StatelessWidget {
+class _BigZweText extends StatelessWidget {
   final ZweDuration zwe;
 
-  BigZweText({Key key, @required this.zwe}) : super(key: key);
+  _BigZweText({Key key, @required this.zwe}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -138,5 +141,3 @@ class BigZweText extends StatelessWidget {
     );
   }
 }
-
-enum ZweSignum { POSITIVE, NEGATIVE }

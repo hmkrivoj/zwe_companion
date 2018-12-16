@@ -18,19 +18,28 @@ class FilterScreen extends StatelessWidget {
     return Scaffold(
       appBar: buildAppBar(context),
       floatingActionButton: buildFloatingActionButton(context),
-      body: SingleChildScrollView(
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(8.0),
-              child: buildSummary(),
-            ),
-            Padding(
+      body: StreamBuilder<Result>(
+        stream: bloc.result,
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          }
+          final result = snapshot.data;
+          return SingleChildScrollView(
+            child: Padding(
               padding: EdgeInsets.only(bottom: 80.0),
-              child: buildResultList(),
+              child: Column(
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: SummaryView(result: result),
+                  ),
+                  buildResultList(context, snapshot.data.workdays),
+                ],
+              ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }
@@ -79,41 +88,20 @@ class FilterScreen extends StatelessWidget {
     );
   }
 
-  StreamBuilder<Balances> buildSummary() {
-    return StreamBuilder<Balances>(
-      stream: bloc.balances,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          return Summary(snapshot.data);
-        }
-        return CircularProgressIndicator();
-      },
-    );
-  }
-
-  StreamBuilder<List<Workday>> buildResultList() {
-    return StreamBuilder<List<Workday>>(
-      stream: bloc.workdays,
-      builder: (context, snapshot) {
-        if (!snapshot.hasData) {
-          return Center(child: CircularProgressIndicator());
-        }
-        if (snapshot.data.length == 0) {
-          return Center(
+  Widget buildResultList(BuildContext context, List<Workday> workdays) {
+    return workdays.length == 0
+        ? Center(
             child: Text(
               'Keine Einträge für diesen Monat\n¯\\_(ツ)_/¯',
               textAlign: TextAlign.center,
               style: Theme.of(context).textTheme.subhead,
             ),
+          )
+        : Column(
+            children: workdays
+                .map((workday) => buildListItem(context, workday))
+                .toList(),
           );
-        }
-        return Column(
-          children: snapshot.data
-              .map((workday) => buildListItem(context, workday))
-              .toList(),
-        );
-      },
-    );
   }
 
   Widget buildListItem(BuildContext context, Workday entry) {

@@ -1,39 +1,45 @@
+import 'package:meta/meta.dart';
 import 'package:optional/optional.dart';
 import 'package:zwe_companion/model/model.dart';
 
 abstract class FilterBloc {
-  Stream<List<Workday>> get workdays;
-  Stream<DateTime> get monthSelected;
-  Stream<Balances> get balances;
+  void dispose();
   void selectMonth(DateTime month);
   Future<Optional<Workday>> create(Workday workday);
   Future<Optional<Workday>> update(Workday workday);
   Future<Optional<Workday>> delete(Workday workday);
-  Stream<Workday> get created;
-  Stream<Workday> get deleted;
-  Stream<Workday> get updated;
+  Stream<DateTime> get monthSelected;
+  Stream<Result> get result;
 }
 
-class Balances {
-  final ZweDuration preBalancePositive;
-  final ZweDuration preBalanceNegative;
-  final ZweDuration preBalance;
-  final ZweDuration midBalancePositive;
-  final ZweDuration midBalanceNegative;
-  final ZweDuration midBalance;
-  final ZweDuration postBalancePositive;
-  final ZweDuration postBalanceNegative;
-  final ZweDuration postBalance;
+@immutable
+class Balance {
+  final ZweDuration positiveAddend;
+  final ZweDuration negativeAddend;
+  Balance(this.positiveAddend, this.negativeAddend)
+      : assert(!positiveAddend.isNegative()),
+        assert(!negativeAddend.isPositive());
+  factory Balance.ofTotal(ZweDuration total) => total.isPositive()
+      ? Balance(total, ZweDuration(0))
+      : Balance(ZweDuration(0), total);
+  ZweDuration get total => positiveAddend + negativeAddend;
+  ZweDuration get negativeTotal => total.isNegative() ? total : ZweDuration(0);
+  ZweDuration get positiveTotal => total.isPositive() ? total : ZweDuration(0);
+}
 
-  Balances(
-    this.preBalancePositive,
-    this.preBalanceNegative,
-    this.preBalance,
-    this.midBalancePositive,
-    this.midBalanceNegative,
-    this.midBalance,
-    this.postBalancePositive,
-    this.postBalanceNegative,
-    this.postBalance,
-  );
+@immutable
+class Result {
+  final Balance pre;
+  final Balance mid;
+  final Balance post;
+  final List<Workday> workdays;
+  final DateTime month;
+
+  Result({
+    @required this.pre,
+    @required this.mid,
+    @required this.post,
+    @required this.workdays,
+    @required this.month,
+  });
 }

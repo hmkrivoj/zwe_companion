@@ -13,9 +13,9 @@ import 'package:zwe_companion/view/screens/filter_screen.dart';
 
 void main() {
   setUpDependencies();
-  final injector = Injector.getInjector();
-  setUpRoutes(injector.get<Router>());
-  runApp(MyApp(router: injector.get<Router>()));
+  setUpRoutes();
+  final router = Injector.getInjector().get<Router>();
+  runApp(MyApp(router: router));
 }
 
 /// Registers all interdependencies with the dependency injector.
@@ -31,14 +31,17 @@ void setUpDependencies() {
 }
 
 /// Registers handlers for all page routes.
-void setUpRoutes(Router router) {
+void setUpRoutes() {
   final injector = Injector.getInjector();
-  var home = Handler(handlerFunc: (context, params) {
+  final router = injector.get<Router>();
+  // Route handlers
+  final home = Handler(handlerFunc: (context, params) {
     return FilterScreen(bloc: injector.get());
   });
-  var create = Handler(handlerFunc: (context, params) {
+  final create = Handler(handlerFunc: (context, params) {
     return CreateScreen(initialBloc: injector.get());
   });
+  // Routes
   router.define('/', handler: home);
   router.define('/create', handler: create);
 }
