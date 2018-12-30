@@ -7,13 +7,15 @@ import 'package:zwe_companion/persistence/repository.dart';
 /// Repository using Sqflite for persisting data locally.
 class SqliteRepository implements Repository {
   static const _DATABASE_FILE = '/zwe_companion.db';
-  static const _VERSION = 2;
+  static const _VERSION = 4;
   static const _TABLE_WORKDAY = 'workday';
   static const _COLUMN_WORKDAY_ID = 'id';
   static const _COLUMN_WORKDAY_ARRIVAL = 'arrival';
   static const _COLUMN_WORKDAY_DEPARTURE = 'departure';
   static const _COLUMN_WORKDAY_TARGET = 'target';
+  /// Usage of this column is deprecated.
   static const _COLUMN_WORKDAY_ADDITIONAL_BREAK = 'additionalBreak';
+  static const _COLUMN_WORKDAY_BREAK = 'break';
   static const _COLUMN_WORKDAY_DATE = 'date';
   static const _COLUMN_WORKDAY_BALANCE = 'balance';
   // Don't use this object directly! Use _getDatabase() instead.
@@ -115,7 +117,7 @@ class SqliteRepository implements Repository {
         $_COLUMN_WORKDAY_ARRIVAL INTEGER,
         $_COLUMN_WORKDAY_DEPARTURE INTEGER,
         $_COLUMN_WORKDAY_TARGET INTEGER,
-        $_COLUMN_WORKDAY_ADDITIONAL_BREAK INTEGER,
+        $_COLUMN_WORKDAY_BREAK INTEGER,
         $_COLUMN_WORKDAY_DATE INTEGER,
         $_COLUMN_WORKDAY_BALANCE INTEGER)
         '''),
@@ -127,6 +129,29 @@ class SqliteRepository implements Repository {
             await db.execute('''
             UPDATE $_TABLE_WORKDAY
             SET $_COLUMN_WORKDAY_DATE = $_COLUMN_WORKDAY_DATE / 1000
+            ''');
+          }
+          // In this version of the database the pause wasn't stored yet
+          if (oldVersion <= 2) {
+            await db.execute('''
+            ALTER TABLE $_TABLE_WORKDAY
+            ADD $_COLUMN_WORKDAY_BREAK INTEGER
+            ''');
+            await db.execute('''
+            UPDATE $_TABLE_WORKDAY
+            SET $_COLUMN_WORKDAY_BREAK = $_COLUMN_WORKDAY_DEPARTURE 
+            - $_COLUMN_WORKDAY_ARRIVAL 
+            - $_COLUMN_WORKDAY_BALANCE
+            ''');
+          }
+          // Bugfix
+          if (oldVersion <= 3) {
+            await db.execute('''
+            UPDATE $_TABLE_WORKDAY
+            SET $_COLUMN_WORKDAY_BREAK = $_COLUMN_WORKDAY_DEPARTURE 
+            - $_COLUMN_WORKDAY_ARRIVAL
+            - $_COLUMN_WORKDAY_TARGET 
+            - $_COLUMN_WORKDAY_BALANCE
             ''');
           }
         },
