@@ -7,14 +7,12 @@ import 'package:zwe_companion/persistence/repository.dart';
 /// Repository using Sqflite for persisting data locally.
 class SqliteRepository implements Repository {
   static const _DATABASE_FILE = '/zwe_companion.db';
-  static const _VERSION = 4;
+  static const _VERSION = 9;
   static const _TABLE_WORKDAY = 'workday';
   static const _COLUMN_WORKDAY_ID = 'id';
   static const _COLUMN_WORKDAY_ARRIVAL = 'arrival';
   static const _COLUMN_WORKDAY_DEPARTURE = 'departure';
   static const _COLUMN_WORKDAY_TARGET = 'target';
-  /// Usage of this column is deprecated.
-  static const _COLUMN_WORKDAY_ADDITIONAL_BREAK = 'additionalBreak';
   static const _COLUMN_WORKDAY_BREAK = 'break';
   static const _COLUMN_WORKDAY_DATE = 'date';
   static const _COLUMN_WORKDAY_BALANCE = 'balance';
@@ -23,7 +21,7 @@ class SqliteRepository implements Repository {
 
   @override
   Future<List<Workday>> findWorkdaysByMonth(DateTime date) => _getDatabase()
-      .then(
+          .then(
         (db) => db.query(
               _TABLE_WORKDAY,
               orderBy: _COLUMN_WORKDAY_DATE,
@@ -36,8 +34,10 @@ class SqliteRepository implements Repository {
               ],
             ),
       )
-      .then((records) =>
-          records.map((record) => Workday.fromMap(record)).toList());
+          .then((records) {
+        print(records);
+        return records.map((record) => Workday.fromMap(record)).toList();
+      });
 
   @override
   Future<ZweDuration> getBalanceAtBeginningOfMonth(DateTime date) {
@@ -153,6 +153,33 @@ class SqliteRepository implements Repository {
             - $_COLUMN_WORKDAY_TARGET 
             - $_COLUMN_WORKDAY_BALANCE
             ''');
+          }
+          // Removing additionalBreak column
+          if (oldVersion <= 8) {
+            final tmp = await db.query(_TABLE_WORKDAY, columns: [
+              _COLUMN_WORKDAY_ID,
+              _COLUMN_WORKDAY_ARRIVAL,
+              _COLUMN_WORKDAY_DEPARTURE,
+              _COLUMN_WORKDAY_TARGET,
+              _COLUMN_WORKDAY_BREAK,
+              _COLUMN_WORKDAY_DATE,
+              _COLUMN_WORKDAY_BALANCE,
+            ]);
+            await db.execute('DROP TABLE $_TABLE_WORKDAY');
+            await db.execute('''
+                CREATE TABLE $_TABLE_WORKDAY (
+                    $_COLUMN_WORKDAY_ID INTEGER PRIMARY KEY AUTOINCREMENT,
+                    $_COLUMN_WORKDAY_ARRIVAL INTEGER,
+                    $_COLUMN_WORKDAY_DEPARTURE INTEGER,
+                    $_COLUMN_WORKDAY_TARGET INTEGER,
+                    $_COLUMN_WORKDAY_BREAK INTEGER,
+                    $_COLUMN_WORKDAY_DATE INTEGER,
+                    $_COLUMN_WORKDAY_BALANCE INTEGER
+                );
+            ''');
+            for (final row in tmp) {
+              await db.insert(_TABLE_WORKDAY, row);
+            }
           }
         },
       );
