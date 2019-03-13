@@ -6,17 +6,17 @@ abstract class CreateBloc {
   Stream<Optional<ZweInstant>> get arrival;
   Stream<Optional<ZweInstant>> get departure;
   Stream<Optional<ZweDuration>> get target;
-  Stream<Optional<ZweDuration>> get additionalBreak;
+  Stream<Optional<ZweDuration>> get totalBreak;
   Stream<Optional<Workday>> get workday;
   Sink<String> get dateSink;
   Sink<String> get arrivalSink;
   Sink<String> get departureSink;
   Sink<String> get targetSink;
-  Sink<String> get additionalBreakSink;
+  Sink<String> get totalBreakSink;
   DateTime get initialDate;
   ZweInstant get initialArrival;
   ZweInstant get initialDeparture;
   ZweDuration get initialTarget;
-  ZweDuration get initialAdditionalBreak;
+  ZweDuration get initialTotalBreak;
   void createWorkday(Workday workday);
 }

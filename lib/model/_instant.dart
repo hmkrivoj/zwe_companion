@@ -2,12 +2,10 @@ import 'package:zwe_companion/model/model.dart';
 
 /// ZWE representing a point in time instead of a period of time.
 /// The day starts with 0 ZWE which is 6:30 in real time.
-class ZweInstant implements FormatableZweTemporal {
-  final int raw;
-
-  const ZweInstant(this.raw);
-  const ZweInstant.fromTime(int hour, int minute)
-      : this.raw = (10 * hour + minute ~/ 6 - 65) % 240;
+class ZweInstant extends ZweTemporal {
+  ZweInstant(int raw) : super(raw);
+  factory ZweInstant.fromTime(int hour, int minute) =>
+      ZweInstant((10 * hour + minute ~/ 6 - 65) % 240);
 
   @override
   int get hour => ((raw + 65) % 240 ~/ 10);

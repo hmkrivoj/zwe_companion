@@ -62,10 +62,10 @@ class CreateScreenState extends State<CreateScreen> {
             ),
             Divider(),
             DurationTextfield(
-              labelText: 'Pause zusätzlich zur vorgeschriebenen Pause',
-              stream: bloc.additionalBreak,
-              sink: bloc.additionalBreakSink,
-              initialData: bloc.initialAdditionalBreak,
+              labelText: 'Pause',
+              stream: bloc.totalBreak,
+              sink: bloc.totalBreakSink,
+              initialData: bloc.initialTotalBreak,
             ),
             Divider(),
             Row(

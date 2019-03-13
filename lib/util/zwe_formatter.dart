@@ -7,7 +7,7 @@ class ZweFormatter {
 
   const ZweFormatter({this.suffix = '', this.prefix = ''});
 
-  String format(FormatableZweTemporal temporal) => '$prefix'
+  String format(ZweTemporal temporal) => '$prefix'
       '${temporal.hour.toString().padLeft(2, '0')}:'
       '${temporal.minute.toString().padLeft(2, '0')}'
       '$suffix';

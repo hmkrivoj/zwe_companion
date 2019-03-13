@@ -9,7 +9,7 @@ class CreateBlocImpl implements CreateBloc {
   static final _dateRegex = RegExp(r'\d\d?\.\d\d?\.\d\d\d\d');
   static final _zweRegex = RegExp(r'\D');
 
-  final _additionalBreakController = BehaviorSubject<String>();
+  final _totalBreakController = BehaviorSubject<String>();
   final _arrivalController = BehaviorSubject<String>();
   final _dateController = BehaviorSubject<String>();
   final _departureController = BehaviorSubject<String>();
@@ -21,7 +21,7 @@ class CreateBlocImpl implements CreateBloc {
   CreateBlocImpl(this.dao, this.initialDate);
 
   @override
-  Sink<String> get additionalBreakSink => _additionalBreakController;
+  Sink<String> get totalBreakSink => _totalBreakController;
   @override
   Sink<String> get arrivalSink => _arrivalController;
   @override
@@ -32,8 +32,8 @@ class CreateBlocImpl implements CreateBloc {
   Sink<String> get targetSink => _targetController;
 
   @override
-  Stream<Optional<ZweDuration>> get additionalBreak =>
-      _additionalBreakController.map((text) => _parseDuration(text));
+  Stream<Optional<ZweDuration>> get totalBreak =>
+      _totalBreakController.map((text) => _parseDuration(text));
   @override
   Stream<Optional<ZweInstant>> get arrival =>
       _arrivalController.map((text) => _parseInstant(text));
@@ -58,21 +58,21 @@ class CreateBlocImpl implements CreateBloc {
         arrival,
         departure,
         target,
-        additionalBreak,
+        totalBreak,
         date,
-        (arrival, departure, target, additional, date) =>
+        (arrival, departure, target, totalBreak, date) =>
             // Make sure input data is valid by checking if it's present
             arrival.isPresent &&
                     departure.isPresent &&
                     target.isPresent &&
-                    additional.isPresent &&
+                    totalBreak.isPresent &&
                     date.isPresent
                 // All data is present, create Workday from data
                 ? Optional.of(Workday(
                     arrival: arrival.value,
                     departure: departure.value,
                     target: target.value,
-                    additionalBreak: additional.value,
+                    totalBreak: totalBreak.value,
                     date: date.value,
                   ))
                 // Data is invalid, don't return anything
@@ -100,7 +100,7 @@ class CreateBlocImpl implements CreateBloc {
   void createWorkday(Workday workday) => dao.create(workday);
 
   @override
-  ZweDuration get initialAdditionalBreak => ZweDuration(0);
+  ZweDuration get initialTotalBreak => ZweDuration(5);
 
   @override
   ZweInstant get initialArrival => ZweInstant(0);
@@ -110,4 +110,5 @@ class CreateBlocImpl implements CreateBloc {
 
   @override
   ZweDuration get initialTarget => ZweDuration(78);
+
 }

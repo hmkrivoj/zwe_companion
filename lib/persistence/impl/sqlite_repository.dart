@@ -21,7 +21,7 @@ class SqliteRepository implements Repository {
 
   @override
   Future<List<Workday>> findWorkdaysByMonth(DateTime date) => _getDatabase()
-          .then(
+      .then(
         (db) => db.query(
               _TABLE_WORKDAY,
               orderBy: _COLUMN_WORKDAY_DATE,
@@ -34,10 +34,9 @@ class SqliteRepository implements Repository {
               ],
             ),
       )
-          .then((records) {
-        print(records);
-        return records.map((record) => Workday.fromMap(record)).toList();
-      });
+      .then(
+        (records) => records.map((record) => Workday.fromMap(record)).toList(),
+      );
 
   @override
   Future<ZweDuration> getBalanceAtBeginningOfMonth(DateTime date) {

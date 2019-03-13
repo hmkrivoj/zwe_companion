@@ -6,7 +6,7 @@ class Workday implements Comparable<Workday> {
   ZweInstant arrival;
   ZweInstant departure;
   ZweDuration target;
-  ZweDuration additionalBreak;
+  ZweDuration totalBreak;
 
   Workday({
     this.id,
@@ -14,16 +14,10 @@ class Workday implements Comparable<Workday> {
     this.arrival,
     this.departure,
     this.target,
-    this.additionalBreak,
+    this.totalBreak,
   });
 
   ZweDuration get total => arrival.until(departure);
-  ZweDuration get totalBreak =>
-      ZweDuration([61, 62, 63, 64, 65, 96, 97, 98]
-          // Number of markers passed = breaktime in zwe
-          .where((marker) => (total - additionalBreak).raw >= marker)
-          .length) +
-      additionalBreak;
   ZweDuration get actualWork => total - totalBreak;
   ZweDuration get balance => actualWork - target;
 
@@ -33,7 +27,7 @@ class Workday implements Comparable<Workday> {
         'arrival': arrival.raw,
         'departure': departure.raw,
         'target': target.raw,
-        'additionalBreak': additionalBreak.raw,
+        'break': totalBreak.raw,
         'balance': balance.raw,
       };
 
@@ -43,14 +37,14 @@ class Workday implements Comparable<Workday> {
     assert(map.containsKey('arrival'));
     assert(map.containsKey('departure'));
     assert(map.containsKey('target'));
-    assert(map.containsKey('additionalBreak'));
+    assert(map.containsKey('break'));
     return Workday(
       id: map['id'],
       date: DateTime.fromMillisecondsSinceEpoch(map['date'] * 1000),
       arrival: ZweInstant(map['arrival']),
       departure: ZweInstant(map['departure']),
       target: ZweDuration(map['target']),
-      additionalBreak: ZweDuration(map['additionalBreak']),
+      totalBreak: ZweDuration(map['break']),
     );
   }
 
