@@ -20,7 +20,6 @@ class WorkdayView extends StatelessWidget {
     final balanceColor = entry.balance.isPositive()
         ? Colors.green
         : entry.balance.isNegative() ? Colors.red : null;
-    final shade = entry.date.weekday * 100 + 200;
     final fontColor =
         Theme.of(context).primaryColorBrightness == Brightness.light
             ? Colors.black87
@@ -35,7 +34,7 @@ class WorkdayView extends StatelessWidget {
             child: Material(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4.0)),
-              color: (Theme.of(context).primaryColor as MaterialColor)[shade],
+              color: Theme.of(context).primaryColor,
               textStyle:
                   TextStyle(color: fontColor, fontWeight: FontWeight.w600),
               child: Column(

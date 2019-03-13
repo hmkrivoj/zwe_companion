@@ -46,32 +46,52 @@ class FilterScreen extends StatelessWidget {
 
   AppBar buildAppBar(BuildContext context) {
     return AppBar(
-      title: StreamBuilder(
+      title: StreamBuilder<DateTime>(
           stream: bloc.monthSelected,
           builder: (context, snapshot) {
             if (snapshot.hasData) {
-              return Text('${DateFormat.yMMMM('de_DE').format(snapshot.data)}');
+              return FlatButton(
+                child: Text(
+                  '${DateFormat.yMMMM('de_DE').format(snapshot.data)}',
+                  style: Theme.of(context).textTheme.title,
+                ),
+                onPressed: () => showMonthPicker(
+                            context: context, initialDate: snapshot.data)
+                        .then(
+                      (month) {
+                        if (month != null) {
+                          bloc.selectMonth(month);
+                        }
+                      },
+                    ),
+              );
             }
             return Text('Kein Monat ausgewählt');
           }),
       centerTitle: true,
       actions: <Widget>[
         IconButton(
-          icon: Icon(Icons.edit),
+          icon: Icon(Icons.arrow_forward),
           onPressed: () => bloc.monthSelected.first.then(
-                (selected) => showMonthPicker(
-                      context: context,
-                      initialDate: selected,
-                    ).then(
-                      (date) {
-                        if (date != null) {
-                          bloc.selectMonth(date);
-                        }
-                      },
-                    ),
+                (selected) {
+                  if (selected != null) {
+                    bloc.selectMonth(
+                        DateTime(selected.year, selected.month + 1));
+                  }
+                },
               ),
-        )
+        ),
       ],
+      leading: IconButton(
+        icon: Icon(Icons.arrow_back),
+        onPressed: () => bloc.monthSelected.first.then(
+              (selected) {
+                if (selected != null) {
+                  bloc.selectMonth(DateTime(selected.year, selected.month - 1));
+                }
+              },
+            ),
+      ),
     );
   }
 
