@@ -51,13 +51,16 @@ class FilterScreen extends StatelessWidget {
           builder: (context, snapshot) {
             if (snapshot.hasData) {
               return FlatButton(
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(4.0))),
                 child: Text(
                   '${DateFormat.yMMMM('de_DE').format(snapshot.data)}',
-                  style: Theme.of(context).textTheme.title,
+                  style: Theme.of(context).primaryTextTheme.title,
                 ),
                 onPressed: () => showMonthPicker(
-                            context: context, initialDate: snapshot.data)
-                        .then(
+                      context: context,
+                      initialDate: snapshot.data,
+                    ).then(
                       (month) {
                         if (month != null) {
                           bloc.selectMonth(month);
@@ -71,7 +74,7 @@ class FilterScreen extends StatelessWidget {
       centerTitle: true,
       actions: <Widget>[
         IconButton(
-          icon: Icon(Icons.arrow_forward),
+          icon: Icon(Icons.arrow_forward_ios),
           onPressed: () => bloc.monthSelected.first.then(
                 (selected) {
                   if (selected != null) {
@@ -83,7 +86,7 @@ class FilterScreen extends StatelessWidget {
         ),
       ],
       leading: IconButton(
-        icon: Icon(Icons.arrow_back),
+        icon: Icon(Icons.arrow_back_ios),
         onPressed: () => bloc.monthSelected.first.then(
               (selected) {
                 if (selected != null) {

@@ -2,8 +2,6 @@ import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_simple_dependency_injection/injector.dart';
-import 'package:zwe_companion/bloc/create/bloc.dart';
-import 'package:zwe_companion/bloc/create/bloc_impl.dart';
 import 'package:zwe_companion/bloc/filter/bloc.dart';
 import 'package:zwe_companion/bloc/filter/bloc_impl.dart';
 import 'package:zwe_companion/persistence/impl/sqlite_repository.dart';
@@ -26,8 +24,6 @@ void setUpDependencies() {
   injector.map<FilterBloc>(
       (i) => FilterBlocImpl(i.get<Repository>(), DateTime.now()),
       isSingleton: true);
-  injector.map<CreateBloc>(
-      (i) => CreateBlocImpl(i.get<Repository>(), DateTime.now()));
 }
 
 /// Registers handlers for all page routes.
@@ -39,7 +35,7 @@ void setUpRoutes() {
     return FilterScreen(bloc: injector.get());
   });
   final create = Handler(handlerFunc: (context, params) {
-    return CreateScreen(initialBloc: injector.get());
+    return CreateScreen();
   });
   // Routes
   router.define('/', handler: home);
