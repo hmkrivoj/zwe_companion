@@ -20,10 +20,6 @@ class WorkdayView extends StatelessWidget {
     final balanceColor = entry.balance.isPositive()
         ? Colors.green
         : entry.balance.isNegative() ? Colors.red : null;
-    final fontColor =
-        Theme.of(context).primaryColorBrightness == Brightness.light
-            ? Colors.black87
-            : Colors.white;
     return Row(
       children: <Widget>[
         SizedBox(
@@ -35,8 +31,10 @@ class WorkdayView extends StatelessWidget {
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(4.0)),
               color: Theme.of(context).primaryColor,
-              textStyle:
-                  TextStyle(color: fontColor, fontWeight: FontWeight.w600),
+              textStyle: TextStyle(
+                fontWeight: FontWeight.w600,
+                color: Theme.of(context).primaryTextTheme.title.color,
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,

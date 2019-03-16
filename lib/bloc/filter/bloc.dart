@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:meta/meta.dart';
 import 'package:optional/optional.dart';
 import 'package:zwe_companion/model/model.dart';
